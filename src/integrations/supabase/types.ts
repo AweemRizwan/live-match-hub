@@ -14,6 +14,71 @@ export type Database = {
   }
   public: {
     Tables: {
+      ads: {
+        Row: {
+          created_at: string
+          display_duration_seconds: number
+          id: string
+          image_url: string
+          impressions_count: number
+          is_active: boolean
+          position: Database["public"]["Enums"]["ad_position"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_duration_seconds?: number
+          id?: string
+          image_url: string
+          impressions_count?: number
+          is_active?: boolean
+          position?: Database["public"]["Enums"]["ad_position"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_duration_seconds?: number
+          id?: string
+          image_url?: string
+          impressions_count?: number
+          is_active?: boolean
+          position?: Database["public"]["Enums"]["ad_position"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      match_viewers: {
+        Row: {
+          id: string
+          last_seen: string
+          match_id: string
+          viewer_id: string
+        }
+        Insert: {
+          id?: string
+          last_seen?: string
+          match_id: string
+          viewer_id: string
+        }
+        Update: {
+          id?: string
+          last_seen?: string
+          match_id?: string
+          viewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "match_viewers_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       matches: {
         Row: {
           created_at: string
@@ -53,14 +118,48 @@ export type Database = {
         }
         Relationships: []
       }
+      page_visits: {
+        Row: {
+          created_at: string
+          id: string
+          match_id: string | null
+          page: string
+          visitor_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          match_id?: string | null
+          page: string
+          visitor_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          match_id?: string | null
+          page?: string
+          visitor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_visits_match_id_fkey"
+            columns: ["match_id"]
+            isOneToOne: false
+            referencedRelation: "matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_active_viewer_count: { Args: { p_match_id: string }; Returns: number }
+      increment_ad_impressions: { Args: { ad_id: string }; Returns: undefined }
     }
     Enums: {
+      ad_position: "top_banner" | "side_banner"
       match_sport: "cricket" | "football" | "basketball"
       match_status: "upcoming" | "live" | "finished"
     }
@@ -190,6 +289,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      ad_position: ["top_banner", "side_banner"],
       match_sport: ["cricket", "football", "basketball"],
       match_status: ["upcoming", "live", "finished"],
     },
