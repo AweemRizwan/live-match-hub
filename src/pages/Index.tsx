@@ -14,6 +14,8 @@ export default function Index() {
     queryFn: () => fetchMatches(sport ?? undefined),
   });
 
+  useEffect(() => { trackPageVisit("home"); }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
