@@ -14,7 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      matches: {
+        Row: {
+          created_at: string
+          id: string
+          match_date: string
+          sport: Database["public"]["Enums"]["match_sport"]
+          status: Database["public"]["Enums"]["match_status"]
+          team_away: string
+          team_home: string
+          title: string
+          updated_at: string
+          youtube_link: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          match_date?: string
+          sport: Database["public"]["Enums"]["match_sport"]
+          status?: Database["public"]["Enums"]["match_status"]
+          team_away: string
+          team_home: string
+          title: string
+          updated_at?: string
+          youtube_link: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          match_date?: string
+          sport?: Database["public"]["Enums"]["match_sport"]
+          status?: Database["public"]["Enums"]["match_status"]
+          team_away?: string
+          team_home?: string
+          title?: string
+          updated_at?: string
+          youtube_link?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +61,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      match_sport: "cricket" | "football" | "basketball"
+      match_status: "upcoming" | "live" | "finished"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +189,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      match_sport: ["cricket", "football", "basketball"],
+      match_status: ["upcoming", "live", "finished"],
+    },
   },
 } as const
