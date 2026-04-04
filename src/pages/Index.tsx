@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchMatches, type MatchSport } from "@/lib/matches";
+import { trackPageVisit } from "@/lib/analytics";
 import { MatchCard } from "@/components/MatchCard";
 import { SportFilter } from "@/components/SportFilter";
 import { Header } from "@/components/Header";
@@ -12,6 +13,8 @@ export default function Index() {
     queryKey: ["matches", sport],
     queryFn: () => fetchMatches(sport ?? undefined),
   });
+
+  useEffect(() => { trackPageVisit("home"); }, []);
 
   return (
     <div className="min-h-screen bg-background">

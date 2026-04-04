@@ -8,8 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Plus, Trash2, Pencil, Loader2 } from "lucide-react";
+import { Plus, Trash2, Pencil, Loader2, Image, BarChart3 } from "lucide-react";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
 
 function MatchForm({ match, onDone }: { match?: Match; onDone: () => void }) {
   const qc = useQueryClient();
@@ -98,8 +99,20 @@ export default function AdminPage() {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container py-8">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <h1 className="font-heading text-3xl font-bold text-foreground">Admin Panel</h1>
+          <div className="flex gap-2">
+            <Link to="/admin/ads">
+              <Button variant="outline"><Image className="mr-2 h-4 w-4" /> Manage Ads</Button>
+            </Link>
+            <Link to="/admin/analytics">
+              <Button variant="outline"><BarChart3 className="mr-2 h-4 w-4" /> Analytics</Button>
+            </Link>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-heading text-xl font-semibold text-foreground">Matches</h2>
           <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setEditing(undefined); }}>
             <DialogTrigger asChild>
               <Button><Plus className="mr-2 h-4 w-4" /> Add Match</Button>
@@ -110,6 +123,7 @@ export default function AdminPage() {
             </DialogContent>
           </Dialog>
         </div>
+
         {isLoading ? (
           <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
         ) : (
