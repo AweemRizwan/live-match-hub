@@ -14,154 +14,284 @@ export type Database = {
   }
   public: {
     Tables: {
-      ads: {
+      bookings: {
         Row: {
           created_at: string
-          display_duration_seconds: number
+          event_id: string
           id: string
-          image_url: string
-          impressions_count: number
-          is_active: boolean
-          position: Database["public"]["Enums"]["ad_position"]
-          title: string
+          quantity: number
+          status: Database["public"]["Enums"]["booking_status"]
+          stripe_session_id: string | null
+          ticket_id: string
+          total_cents: number
           updated_at: string
+          user_id: string
         }
         Insert: {
           created_at?: string
-          display_duration_seconds?: number
+          event_id: string
           id?: string
-          image_url: string
-          impressions_count?: number
-          is_active?: boolean
-          position?: Database["public"]["Enums"]["ad_position"]
-          title: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["booking_status"]
+          stripe_session_id?: string | null
+          ticket_id: string
+          total_cents?: number
           updated_at?: string
+          user_id: string
         }
         Update: {
           created_at?: string
-          display_duration_seconds?: number
+          event_id?: string
           id?: string
-          image_url?: string
-          impressions_count?: number
-          is_active?: boolean
-          position?: Database["public"]["Enums"]["ad_position"]
-          title?: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["booking_status"]
+          stripe_session_id?: string | null
+          ticket_id?: string
+          total_cents?: number
           updated_at?: string
-        }
-        Relationships: []
-      }
-      match_viewers: {
-        Row: {
-          id: string
-          last_seen: string
-          match_id: string
-          viewer_id: string
-        }
-        Insert: {
-          id?: string
-          last_seen?: string
-          match_id: string
-          viewer_id: string
-        }
-        Update: {
-          id?: string
-          last_seen?: string
-          match_id?: string
-          viewer_id?: string
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "match_viewers_match_id_fkey"
-            columns: ["match_id"]
+            foreignKeyName: "bookings_event_id_fkey"
+            columns: ["event_id"]
             isOneToOne: false
-            referencedRelation: "matches"
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "tickets"
             referencedColumns: ["id"]
           },
         ]
       }
-      matches: {
+      categories: {
         Row: {
           created_at: string
           id: string
-          match_date: string
-          sport: Database["public"]["Enums"]["match_sport"]
-          status: Database["public"]["Enums"]["match_status"]
-          team_away: string
-          team_home: string
-          title: string
-          updated_at: string
-          youtube_link: string
+          name: string
+          slug: string
         }
         Insert: {
           created_at?: string
           id?: string
-          match_date?: string
-          sport: Database["public"]["Enums"]["match_sport"]
-          status?: Database["public"]["Enums"]["match_status"]
-          team_away: string
-          team_home: string
-          title: string
-          updated_at?: string
-          youtube_link: string
+          name: string
+          slug: string
         }
         Update: {
           created_at?: string
           id?: string
-          match_date?: string
-          sport?: Database["public"]["Enums"]["match_sport"]
-          status?: Database["public"]["Enums"]["match_status"]
-          team_away?: string
-          team_home?: string
-          title?: string
-          updated_at?: string
-          youtube_link?: string
+          name?: string
+          slug?: string
         }
         Relationships: []
       }
-      page_visits: {
+      events: {
+        Row: {
+          banner_url: string | null
+          capacity: number | null
+          category_id: string | null
+          created_at: string
+          description: string | null
+          event_date: string
+          id: string
+          is_online: boolean
+          organizer_id: string
+          status: Database["public"]["Enums"]["event_status"]
+          stream_url: string | null
+          title: string
+          updated_at: string
+          venue: string | null
+        }
+        Insert: {
+          banner_url?: string | null
+          capacity?: number | null
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          event_date: string
+          id?: string
+          is_online?: boolean
+          organizer_id: string
+          status?: Database["public"]["Enums"]["event_status"]
+          stream_url?: string | null
+          title: string
+          updated_at?: string
+          venue?: string | null
+        }
+        Update: {
+          banner_url?: string | null
+          capacity?: number | null
+          category_id?: string | null
+          created_at?: string
+          description?: string | null
+          event_date?: string
+          id?: string
+          is_online?: boolean
+          organizer_id?: string
+          status?: Database["public"]["Enums"]["event_status"]
+          stream_url?: string | null
+          title?: string
+          updated_at?: string
+          venue?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount_cents: number
+          booking_id: string
+          created_at: string
+          id: string
+          status: Database["public"]["Enums"]["payment_status"]
+          stripe_payment_id: string | null
+        }
+        Insert: {
+          amount_cents: number
+          booking_id: string
+          created_at?: string
+          id?: string
+          status?: Database["public"]["Enums"]["payment_status"]
+          stripe_payment_id?: string | null
+        }
+        Update: {
+          amount_cents?: number
+          booking_id?: string
+          created_at?: string
+          id?: string
+          status?: Database["public"]["Enums"]["payment_status"]
+          stripe_payment_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          name: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id: string
+          name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tickets: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          name: string
+          price_cents: number
+          quantity: number
+          sold: number
+          type: Database["public"]["Enums"]["ticket_type"]
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          name: string
+          price_cents?: number
+          quantity?: number
+          sold?: number
+          type?: Database["public"]["Enums"]["ticket_type"]
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          name?: string
+          price_cents?: number
+          quantity?: number
+          sold?: number
+          type?: Database["public"]["Enums"]["ticket_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tickets_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
         Row: {
           created_at: string
           id: string
-          match_id: string | null
-          page: string
-          visitor_id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
-          match_id?: string | null
-          page: string
-          visitor_id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
         }
         Update: {
           created_at?: string
           id?: string
-          match_id?: string | null
-          page?: string
-          visitor_id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "page_visits_match_id_fkey"
-            columns: ["match_id"]
-            isOneToOne: false
-            referencedRelation: "matches"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      get_active_viewer_count: { Args: { p_match_id: string }; Returns: number }
-      increment_ad_impressions: { Args: { ad_id: string }; Returns: undefined }
+      get_user_roles: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"][]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      ad_position: "top_banner" | "side_banner"
-      match_sport: "cricket" | "football" | "basketball"
-      match_status: "upcoming" | "live" | "finished"
+      app_role: "admin" | "organizer" | "attendee" | "sponsor"
+      booking_status: "pending" | "paid" | "cancelled" | "refunded"
+      event_status: "draft" | "pending" | "approved" | "rejected" | "cancelled"
+      payment_status: "pending" | "succeeded" | "failed" | "refunded"
+      ticket_type: "free" | "standard" | "vip" | "premium"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -289,9 +419,11 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      ad_position: ["top_banner", "side_banner"],
-      match_sport: ["cricket", "football", "basketball"],
-      match_status: ["upcoming", "live", "finished"],
+      app_role: ["admin", "organizer", "attendee", "sponsor"],
+      booking_status: ["pending", "paid", "cancelled", "refunded"],
+      event_status: ["draft", "pending", "approved", "rejected", "cancelled"],
+      payment_status: ["pending", "succeeded", "failed", "refunded"],
+      ticket_type: ["free", "standard", "vip", "premium"],
     },
   },
 } as const
