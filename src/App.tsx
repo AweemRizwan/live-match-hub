@@ -3,11 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index";
-import MatchPage from "./pages/MatchPage";
-import AdminPage from "./pages/AdminPage";
-import AdminAdsPage from "./pages/AdminAdsPage";
-import AnalyticsDashboard from "./pages/AnalyticsDashboard";
+import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -19,11 +15,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/match/:id" element={<MatchPage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/admin/ads" element={<AdminAdsPage />} />
-          <Route path="/admin/analytics" element={<AnalyticsDashboard />} />
+          <Route path="/" element={<Landing />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
